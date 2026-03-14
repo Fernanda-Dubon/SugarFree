@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SugarFree — Pacientes</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/pacientes.css">
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+  <a href="../dashboard.html" style="display:flex; align-items:center; gap:10px; text-decoration:none">
+    <div class="logo-icon">🩺</div>
+    <div>
+      <span>SugarFree</span>
+      <small>Panel de cuidador</small>
+    </div>
+  </a>
+</div>
+    <nav class="sidebar-nav">
+      <a href="../dashboard.html" class="nav-link">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+      <p class="sidebar-label">Pacientes</p>
+      <a href="pacientes.html" class="nav-link active">
+        <span class="nav-icon">👤</span> Mis Pacientes
+      </a>
+      <a href="glucemia.html" class="nav-link">
+        <span class="nav-icon">📊</span> Glucemia
+      </a>
+      <p class="sidebar-label">Cuidados</p>
+      <a href="medicamentos.html" class="nav-link">
+        <span class="nav-icon">💊</span> Medicamentos
+      </a>
+      <a href="recordatorios.html" class="nav-link">
+        <span class="nav-icon">🔔</span> Recordatorios
+      </a>
+      <a href="dietas.html" class="nav-link">
+        <span class="nav-icon">🥗</span> Dietas
+      </a>
+      <p class="sidebar-label">Más</p>
+      <a href="consejos.html" class="nav-link">
+        <span class="nav-icon">💡</span> Consejos
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+  <div class="avatar" id="sidebarAvatar">C</div>
+  <div class="user-info">
+    <div class="user-name" id="sidebarName">Cuidador</div>
+    <div class="user-role">Cuidador registrado</div>
+  </div>
+  <div class="user-menu-wrapper">
+    <button class="logout-btn" id="userMenuBtn">⋮</button>
+    <div class="user-dropdown" id="userDropdown">
+      <button onclick="logout()" class="dropdown-item dropdown-item-danger">
+        🚪 Cerrar sesión
+      </button>
+    </div>
+  </div>
+</div>
+  </aside>
+
+  <!-- CONTENIDO -->
+  <main class="main-content">
+
+    <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-end">
+      <div>
+        <h1>👤 Mis Pacientes</h1>
+        <p>Gestiona la información de las personas a tu cuidado.</p>
+      </div>
+      <button class="btn btn-primary" onclick="abrirModal()">+ Nuevo paciente</button>
+    </div>
+
+    <!-- Lista de pacientes -->
+    <div class="pacientes-grid" id="pacientesGrid">
+      <p class="empty-state" style="grid-column:1/-1">Cargando pacientes...</p>
+    </div>
+
+  </main>
+</div>
+
+<!--  Nuevo / Editar paciente -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalTitle">Nuevo paciente</h2>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+
+    <form id="pacienteForm">
+      <input type="hidden" id="pacienteId">
+
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Nombre completo *</label>
+          <input class="form-control" id="nombre" placeholder="Ej: Juan Pérez" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Edad *</label>
+          <input class="form-control" id="edad" type="number" min="1" max="120" placeholder="65" required>
+        </div>
+      </div>
+
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Tipo de diabetes *</label>
+          <select class="form-control" id="tipoDiabetes" required>
+            <option value="">Seleccionar...</option>
+            <option value="tipo1">Tipo 1</option>
+            <option value="tipo2">Tipo 2</option>
+            <option value="gestacional">Gestacional</option>
+            <option value="prediabetes">Prediabetes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Peso (kg)</label>
+          <input class="form-control" id="peso" type="number" placeholder="70">
+        </div>
+      </div>
+
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Glucemia mínima normal (mg/dL)</label>
+          <input class="form-control" id="glucMin" type="number" value="70">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Glucemia máxima normal (mg/dL)</label>
+          <input class="form-control" id="glucMax" type="number" value="180">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Alergias alimentarias</label>
+        <input class="form-control" id="alergias" placeholder="Ej: mariscos, nueces (separar por comas)">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Condiciones adicionales</label>
+        <textarea class="form-control" id="condiciones" rows="2" placeholder="Ej: hipertensión, insuficiencia renal..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Notas del cuidador</label>
+        <textarea class="form-control" id="notas" rows="2" placeholder="Observaciones generales..."></textarea>
+      </div>
+
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:8px">
+        <button type="button" class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar paciente</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script
+<script src="../js/utils.js"></script>
+<script>
+  requireAuth();
+  initSidebar();
+
+  async function cargarPacientes() {
+    const grid = document.getElementById('pacientesGrid');
+    try {
+      const pacientes = await api('/pacientes');
+      if (!pacientes || pacientes.length === 0) {
+        grid.innerHTML = `<div class="empty-full">
+          <p style="font-size:3rem;margin-bottom:12px">👤</p>
+          <p style="font-weight:600;font-size:1.1rem">Sin pacientes registrados</p>
+          <p style="color:var(--text-muted);font-size:.875rem">Agrega tu primer paciente con el botón de arriba.</p>
+        </div>`;
+        return;
+      }
+
+      grid.innerHTML = pacientes.map(p => {
+        const gluc = p.glucemiaRango || { min: 70, max: 180 };
+        return `
+          <div class="paciente-card">
+            <div class="paciente-avatar">${p.nombre.charAt(0).toUpperCase()}</div>
+            <div class="paciente-info">
+              <h3>${p.nombre}</h3>
+              <div class="paciente-meta">
+                <span class="badge badge-teal">${p.tipoDiabetes}</span>
+                <span>·</span>
+                <span>${p.edad} años</span>
+                ${p.peso ? `<span>·</span><span>${p.peso} kg</span>` : ''}
+              </div>
+              <div class="paciente-rango">
+                <span class="rango-label">Rango objetivo:</span>
+                <span class="rango-val">${gluc.min} – ${gluc.max} mg/dL</span>
+              </div>
+              ${p.condiciones ? `<p class="paciente-condiciones">${p.condiciones}</p>` : ''}
+            </div>
+            <div class="paciente-actions">
+              <button class="btn btn-icon" onclick="editarPaciente('${p._id}')" title="Editar">✏️</button>
+              <button class="btn btn-icon" onclick="eliminarPaciente('${p._id}')" title="Eliminar" style="color:var(--brand-red)">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (err) {
+      grid.innerHTML = `<p class="empty-state" style="grid-column:1/-1">Error al cargar pacientes.</p>`;
+    }
+  }
+
+  function abrirModal(id = null) {
+    document.getElementById('pacienteForm').reset();
+    document.getElementById('pacienteId').value = '';
+    document.getElementById('modalTitle').textContent = 'Nuevo paciente';
+    document.getElementById('modalOverlay').classList.add('open');
+  }
+
+  function cerrarModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+
+  async function editarPaciente(id) {
+    try {
+      const p = await api(`/pacientes/${id}`);
+      document.getElementById('pacienteId').value = p._id;
+      document.getElementById('nombre').value = p.nombre;
+      document.getElementById('edad').value = p.edad;
+      document.getElementById('tipoDiabetes').value = p.tipoDiabetes;
+      document.getElementById('peso').value = p.peso || '';
+      document.getElementById('glucMin').value = p.glucemiaRango?.min || 70;
+      document.getElementById('glucMax').value = p.glucemiaRango?.max || 180;
+      document.getElementById('alergias').value = p.alergias || '';
+      document.getElementById('condiciones').value = p.condiciones || '';
+      document.getElementById('notas').value = p.notas || '';
+      document.getElementById('modalTitle').textContent = 'Editar paciente';
+      document.getElementById('modalOverlay').classList.add('open');
+    } catch (err) {
+      showToast('No se pudo cargar el paciente', 'error');
+    }
+  }
+
+  async function eliminarPaciente(id) {
+    if (!confirm('¿Seguro que deseas eliminar este paciente? Esta acción no se puede deshacer.')) return;
+    try {
+      await api(`/pacientes/${id}`, 'DELETE');
+      showToast('Paciente eliminado correctamente', 'success');
+      cargarPacientes();
+    } catch (err) {
+      showToast('Error al eliminar paciente', 'error');
+    }
+  }
+
+  document.getElementById('pacienteForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = document.getElementById('pacienteId').value;
+    const payload = {
+      nombre:       document.getElementById('nombre').value,
+      edad:         +document.getElementById('edad').value,
+      tipoDiabetes: document.getElementById('tipoDiabetes').value,
+      peso:         +document.getElementById('peso').value || null,
+      glucemiaRango: {
+        min: +document.getElementById('glucMin').value,
+        max: +document.getElementById('glucMax').value
+      },
+      alergias:    document.getElementById('alergias').value,
+      condiciones: document.getElementById('condiciones').value,
+      notas:       document.getElementById('notas').value
+    };
+
+    try {
+      if (id) {
+        await api(`/pacientes/${id}`, 'PUT', payload);
+        showToast('Paciente actualizado', 'success');
+      } else {
+        await api('/pacientes', 'POST', payload);
+        showToast('Paciente registrado', 'success');
+      }
+      cerrarModal();
+      cargarPacientes();
+    } catch (err) {
+      showToast(err.message || 'Error al guardar', 'error');
+    }
+  });
+
+  document.getElementById('modalOverlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) cerrarModal();
+  });
+
+  cargarPacientes();
+</script>
+<script>
+  document.getElementById('userMenuBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('userDropdown').classList.toggle('open');
+  });
+  document.addEventListener('click', function() {
+    document.getElementById('userDropdown').classList.remove('open');
+  });
+</script>
+</body>
+</html>

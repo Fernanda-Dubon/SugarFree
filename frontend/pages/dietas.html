@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SugarFree — Dietas</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/dietas.css">
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+  <a href="../dashboard.html" style="display:flex; align-items:center; gap:10px; text-decoration:none">
+    <div class="logo-icon">🩺</div>
+    <div>
+      <span>SugarFree</span>
+      <small>Panel de cuidador</small>
+    </div>
+  </a>
+</div>
+    <nav class="sidebar-nav">
+      <a href="../dashboard.html" class="nav-link"><span class="nav-icon">🏠</span> Dashboard</a>
+      <p class="sidebar-label">Pacientes</p>
+      <a href="pacientes.html" class="nav-link"><span class="nav-icon">👤</span> Mis Pacientes</a>
+      <a href="glucemia.html" class="nav-link"><span class="nav-icon">📊</span> Glucemia</a>
+      <p class="sidebar-label">Cuidados</p>
+      <a href="medicamentos.html" class="nav-link"><span class="nav-icon">💊</span> Medicamentos</a>
+      <a href="recordatorios.html" class="nav-link"><span class="nav-icon">🔔</span> Recordatorios</a>
+      <a href="dietas.html" class="nav-link active"><span class="nav-icon">🥗</span> Dietas</a>
+      <p class="sidebar-label">Más</p>
+      <a href="consejos.html" class="nav-link"><span class="nav-icon">💡</span> Consejos</a>
+    </nav>
+    <div class="sidebar-footer">
+  <div class="avatar" id="sidebarAvatar">C</div>
+  <div class="user-info">
+    <div class="user-name" id="sidebarName">Cuidador</div>
+    <div class="user-role">Cuidador registrado</div>
+  </div>
+  <div class="user-menu-wrapper">
+    <button class="logout-btn" id="userMenuBtn">⋮</button>
+    <div class="user-dropdown" id="userDropdown">
+      <button onclick="logout()" class="dropdown-item dropdown-item-danger">
+        🚪 Cerrar sesión
+      </button>
+    </div>
+  </div>
+</div>
+  </aside>
+
+  <main class="main-content">
+
+    <div class="page-header">
+      <h1>🥗 Dietas personalizadas</h1>
+      <p>Genera planes de alimentación adaptados a la condición de cada paciente.</p>
+    </div>
+
+    <!-- Selector paciente + botón generar -->
+    <div class="dieta-toolbar">
+      <div class="patient-selector" style="flex:1; margin-bottom:0">
+        <label>👤 Paciente:</label>
+        <select id="pacienteSelect" onchange="verDietaActual()">
+          <option value="">Seleccionar paciente...</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="generarDieta()" id="btnGenerar">
+        🔄 Generar nueva dieta
+      </button>
+    </div>
+
+    <!-- Perfil del paciente (información usada para la dieta) -->
+    <div class="card" id="perfilCard" style="display:none; margin-bottom:20px">
+      <div class="card-title">📋 Perfil del paciente</div>
+      <div class="perfil-grid" id="perfilContent"></div>
+    </div>
+
+    <!-- Cargando-->
+    <div id="dietaLoader" style="display:none" class="dieta-loader">
+      <div class="loader-anim">🥗</div>
+      <p>Generando dieta personalizada...</p>
+      <small>Esto puede tomar unos segundos</small>
+    </div>
+
+    <!-- Resultado de la dieta -->
+    <div id="dietaResult" style="display:none">
+      <div class="dieta-header">
+        <h2 id="dietaTitulo"></h2>
+        <button class="btn btn-secondary btn-sm" onclick="imprimirDieta()">🖨️ Imprimir</button>
+      </div>
+
+      <!-- Tiempo de comidas en grilla -->
+      <div class="comidas-grid" id="comidasGrid"></div>
+
+      <!-- Alimentos evitar -->
+      <div class="card" id="evitarCard" style="margin-top:20px">
+        <div class="card-title">🚫 Alimentos a evitar</div>
+        <div id="evitarList"></div>
+      </div>
+
+      <!-- Recomendaciones generales -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">💡 Recomendaciones</div>
+        <ul id="recomendaciones" class="recom-list"></ul>
+      </div>
+    </div>
+
+    <!-- Si esta vacio se debe seleccionar un paciente -->
+    <div id="emptyDieta" class="dieta-empty">
+      <span>🥗</span>
+      <p>Selecciona un paciente y genera una dieta personalizada</p>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/utils.js"></script>
+<script>
+  requireAuth();
+  initSidebar();
+
+  let pacienteData = null;
+
+  async function cargarSelectPacientes() {
+    const pacientes = await api('/pacientes');
+    const sel = document.getElementById('pacienteSelect');
+    sel.innerHTML = '<option value="">Seleccionar paciente...</option>';
+    (pacientes || []).forEach(p => {
+      sel.innerHTML += `<option value="${p._id}">${p.nombre}</option>`;
+    });
+  }
+
+  async function verDietaActual() {
+    const pacId = document.getElementById('pacienteSelect').value;
+    document.getElementById('emptyDieta').style.display = 'none';
+    document.getElementById('dietaResult').style.display = 'none';
+    document.getElementById('perfilCard').style.display = 'none';
+
+    if (!pacId) {
+      document.getElementById('emptyDieta').style.display = 'flex';
+      return;
+    }
+
+    // Cargar datos del paciente
+    pacienteData = await api(`/pacientes/${pacId}`);
+    mostrarPerfil(pacienteData);
+
+    // Buscar dieta existente
+    try {
+      const dieta = await api(`/dietas/paciente/${pacId}/ultima`);
+      if (dieta) renderDieta(dieta);
+      else document.getElementById('emptyDieta').style.display = 'flex';
+    } catch {
+      document.getElementById('emptyDieta').style.display = 'flex';
+    }
+  }
+
+  function mostrarPerfil(p) {
+    document.getElementById('perfilCard').style.display = 'block';
+    document.getElementById('perfilContent').innerHTML = `
+      <div class="perfil-item"><span class="perfil-label">Tipo de diabetes</span><span class="perfil-val">${p.tipoDiabetes}</span></div>
+      <div class="perfil-item"><span class="perfil-label">Edad</span><span class="perfil-val">${p.edad} años</span></div>
+      ${p.peso ? `<div class="perfil-item"><span class="perfil-label">Peso</span><span class="perfil-val">${p.peso} kg</span></div>` : ''}
+      <div class="perfil-item"><span class="perfil-label">Rango glucemia</span><span class="perfil-val">${p.glucemiaRango?.min || 70} – ${p.glucemiaRango?.max || 180} mg/dL</span></div>
+      ${p.alergias ? `<div class="perfil-item"><span class="perfil-label">Alergias</span><span class="perfil-val" style="color:var(--brand-red)">${p.alergias}</span></div>` : ''}
+      ${p.condiciones ? `<div class="perfil-item"><span class="perfil-label">Condiciones</span><span class="perfil-val">${p.condiciones}</span></div>` : ''}
+    `;
+  }
+
+  async function generarDieta() {
+    const pacId = document.getElementById('pacienteSelect').value;
+    if (!pacId) { showToast('Selecciona un paciente primero', 'warning'); return; }
+
+    document.getElementById('dietaLoader').style.display = 'flex';
+    document.getElementById('dietaResult').style.display = 'none';
+    document.getElementById('emptyDieta').style.display = 'none';
+    document.getElementById('btnGenerar').disabled = true;
+
+    try {
+      const dieta = await api(`/dietas/generar/${pacId}`, 'POST');
+      renderDieta(dieta);
+      showToast('¡Dieta generada exitosamente!', 'success');
+    } catch (e) {
+      showToast('Error al generar dieta: ' + (e.message || ''), 'error');
+      document.getElementById('emptyDieta').style.display = 'flex';
+    } finally {
+      document.getElementById('dietaLoader').style.display = 'none';
+      document.getElementById('btnGenerar').disabled = false;
+    }
+  }
+
+  const COMIDA_CONFIG = {
+    desayuno:  { icon: '🌅', label: 'Desayuno', hora: '7:00 – 8:00 AM' },
+    media_manana: { icon: '🍎', label: 'Media mañana', hora: '10:00 AM' },
+    almuerzo:  { icon: '🍽️', label: 'Almuerzo', hora: '12:00 – 1:00 PM' },
+    merienda:  { icon: '🫐', label: 'Merienda', hora: '3:00 – 4:00 PM' },
+    cena:      { icon: '🌙', label: 'Cena', hora: '6:00 – 7:00 PM' }
+  };
+
+  function renderDieta(dieta) {
+    document.getElementById('dietaResult').style.display = 'block';
+    document.getElementById('dietaTitulo').textContent =
+      `Plan alimenticio para ${dieta.paciente?.nombre || 'el paciente'}`;
+
+    const grid = document.getElementById('comidasGrid');
+    grid.innerHTML = (dieta.comidas || []).map(c => {
+      const cfg = COMIDA_CONFIG[c.tipo] || { icon: '🍴', label: c.tipo, hora: '' };
+      return `
+        <div class="comida-card">
+          <div class="comida-header">
+            <span class="comida-icon">${cfg.icon}</span>
+            <div>
+              <div class="comida-nombre">${cfg.label}</div>
+              <div class="comida-hora">${cfg.hora}</div>
+            </div>
+          </div>
+          <div class="comida-platos">
+            ${(c.platos || []).map(p => `
+              <div class="plato-item">
+                <span class="plato-nombre">${p.nombre}</span>
+                ${p.porcion ? `<span class="plato-porcion">${p.porcion}</span>` : ''}
+              </div>
+            `).join('')}
+          </div>
+          ${c.nota ? `<div class="comida-nota">💡 ${c.nota}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+
+    // Alimentos a evitar
+    if (dieta.evitar && dieta.evitar.length > 0) {
+      document.getElementById('evitarList').innerHTML = dieta.evitar.map(e =>
+        `<span class="evitar-tag">🚫 ${e}</span>`
+      ).join('');
+    }
+
+    // Recomendaciones
+    const ul = document.getElementById('recomendaciones');
+    ul.innerHTML = (dieta.recomendaciones || []).map(r =>
+      `<li class="recom-item">✅ ${r}</li>`
+    ).join('');
+  }
+
+  function imprimirDieta() {
+    window.print();
+  }
+
+  (async () => {
+    await cargarSelectPacientes();
+    document.getElementById('emptyDieta').style.display = 'flex';
+  })();
+</script>
+<script>
+  document.getElementById('userMenuBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('userDropdown').classList.toggle('open');
+  });
+  document.addEventListener('click', function() {
+    document.getElementById('userDropdown').classList.remove('open');
+  });
+</script>
+</body>
+</html>

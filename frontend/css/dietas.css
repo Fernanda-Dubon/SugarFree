@@ -1,0 +1,215 @@
+/* =========================================
+   SUGARFREE — Dietas CSS
+   ========================================= */
+
+.dieta-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* ── Perfil del paciente ── */
+.perfil-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.perfil-item {
+  background: var(--bg-body);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+
+.perfil-label {
+  display: block;
+  font-size: .68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.perfil-val {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: capitalize;
+}
+
+/* ── Loader ── */
+.dieta-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 12px;
+  color: var(--text-secondary);
+}
+
+.loader-anim {
+  font-size: 3rem;
+  animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
+}
+
+.dieta-loader p { font-size: 1rem; font-weight: 600; }
+.dieta-loader small { font-size: .8rem; color: var(--text-muted); }
+
+/* ── Dieta header ── */
+.dieta-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.dieta-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+/* ── Comidas grid ── */
+.comidas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.comida-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  border-top: 3px solid var(--brand-teal);
+}
+
+.comida-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+.comida-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.comida-icon { font-size: 1.8rem; }
+
+.comida-nombre {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-weight: 700;
+}
+
+.comida-hora {
+  font-size: .72rem;
+  color: var(--text-muted);
+}
+
+.comida-platos {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.plato-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.plato-nombre {
+  font-size: .85rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.plato-porcion {
+  font-size: .72rem;
+  color: var(--text-muted);
+  background: var(--bg-body);
+  border: 1px solid var(--border);
+  padding: 1px 7px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+.comida-nota {
+  font-size: .75rem;
+  color: var(--brand-teal-dark);
+  background: #CCFBF1;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+}
+
+/* ── Alimentos a evitar ── */
+#evitarList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.evitar-tag {
+  background: #FFF1F2;
+  border: 1px solid #FECDD3;
+  color: #9F1239;
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: .8rem;
+  font-weight: 600;
+}
+
+/* ── Recomendaciones ── */
+.recom-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+}
+
+.recom-item {
+  font-size: .875rem;
+  color: var(--text-primary);
+  padding: 8px 12px;
+  background: var(--bg-body);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--brand-green);
+}
+
+/* ── Empty state ── */
+.dieta-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 80px 20px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.dieta-empty span { font-size: 4rem; }
+.dieta-empty p { font-size: .95rem; max-width: 320px; }
+
+/* ── Print ── */
+@media print {
+  .sidebar, .dieta-toolbar, .btn, .page-header p { display: none !important; }
+  .main-content { margin: 0; padding: 20px; }
+}

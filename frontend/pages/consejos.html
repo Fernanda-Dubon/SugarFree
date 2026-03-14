@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SugarFree — Consejos</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/consejos.css">
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+  <a href="../dashboard.html" style="display:flex; align-items:center; gap:10px; text-decoration:none">
+    <div class="logo-icon">🩺</div>
+    <div>
+      <span>SugarFree</span>
+      <small>Panel de cuidador</small>
+    </div>
+  </a>
+</div>
+    <nav class="sidebar-nav">
+      <a href="../dashboard.html" class="nav-link"><span class="nav-icon">🏠</span> Dashboard</a>
+      <p class="sidebar-label">Pacientes</p>
+      <a href="pacientes.html" class="nav-link"><span class="nav-icon">👤</span> Mis Pacientes</a>
+      <a href="glucemia.html" class="nav-link"><span class="nav-icon">📊</span> Glucemia</a>
+      <p class="sidebar-label">Cuidados</p>
+      <a href="medicamentos.html" class="nav-link"><span class="nav-icon">💊</span> Medicamentos</a>
+      <a href="recordatorios.html" class="nav-link"><span class="nav-icon">🔔</span> Recordatorios</a>
+      <a href="dietas.html" class="nav-link"><span class="nav-icon">🥗</span> Dietas</a>
+      <p class="sidebar-label">Más</p>
+      <a href="consejos.html" class="nav-link active"><span class="nav-icon">💡</span> Consejos</a>
+    </nav>
+    <div class="sidebar-footer">
+  <div class="avatar" id="sidebarAvatar">C</div>
+  <div class="user-info">
+    <div class="user-name" id="sidebarName">Cuidador</div>
+    <div class="user-role">Cuidador registrado</div>
+  </div>
+  <div class="user-menu-wrapper">
+    <button class="logout-btn" id="userMenuBtn">⋮</button>
+    <div class="user-dropdown" id="userDropdown">
+      <button onclick="logout()" class="dropdown-item dropdown-item-danger">
+        🚪 Cerrar sesión
+      </button>
+    </div>
+  </div>
+</div>
+  </aside>
+
+  <main class="main-content">
+
+    <div class="page-header">
+      <h1>💡 Consejos para cuidadores</h1>
+      <p>Guía práctica para el cuidado diario de personas con diabetes.</p>
+    </div>
+
+    <!-- Filtro de categorías -->
+    <div class="consejos-filters">
+      <button class="filter-btn active" data-cat="todos" onclick="filtrar('todos', this)">Todos</button>
+      <button class="filter-btn" data-cat="glucemia" onclick="filtrar('glucemia', this)">📊 Glucemia</button>
+      <button class="filter-btn" data-cat="alimentacion" onclick="filtrar('alimentacion', this)">🥗 Alimentación</button>
+      <button class="filter-btn" data-cat="ejercicio" onclick="filtrar('ejercicio', this)">🏃 Ejercicio</button>
+      <button class="filter-btn" data-cat="medicacion" onclick="filtrar('medicacion', this)">💊 Medicación</button>
+      <button class="filter-btn" data-cat="emergencia" onclick="filtrar('emergencia', this)">🚨 Emergencias</button>
+      <button class="filter-btn" data-cat="cuidador" onclick="filtrar('cuidador', this)">🤝 Para el cuidador</button>
+    </div>
+
+    <!-- Consejo destacado (rotativo) -->
+    <div class="consejo-destacado" id="consejoDestacado">
+      <div class="dest-badge">💡 Consejo del día</div>
+      <h2 id="destTitulo">Controla el estrés</h2>
+      <p id="destDesc">El estrés puede elevar los niveles de glucosa. Practica técnicas de relajación y comunica las preocupaciones al médico tratante.</p>
+    </div>
+
+    <!-- Grid de consejos -->
+    <div class="consejos-grid" id="consejosGrid"></div>
+
+  </main>
+</div>
+
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/utils.js"></script>
+<script>
+  requireAuth();
+  initSidebar();
+
+  const CONSEJOS = [
+    {
+      cat: 'glucemia',
+      icon: '📊',
+      titulo: 'Registra a las mismas horas',
+      texto: 'Mide la glucemia siempre en los mismos momentos del día (ayunas, antes y después de comer) para tener comparaciones válidas.',
+      color: 'blue'
+    },
+    {
+      cat: 'glucemia',
+      icon: '⚠️',
+      titulo: 'Reconoce la hipoglucemia',
+      texto: 'Temblor, sudoración, confusión y palidez son señales de glucosa baja. Actúa rápido con 15g de carbohidratos de acción rápida (jugo, tabletas de glucosa).',
+      color: 'red'
+    },
+    {
+      cat: 'glucemia',
+      icon: '🌡️',
+      titulo: 'Glucómetro limpio y calibrado',
+      texto: 'Verifica la fecha de vencimiento de las tiras reactivas. Guarda el glucómetro a temperatura ambiente, lejos de humedad y luz solar directa.',
+      color: 'teal'
+    },
+    {
+      cat: 'alimentacion',
+      icon: '🕐',
+      titulo: 'Horarios regulares de comida',
+      texto: 'Mantener horarios fijos de alimentación ayuda a estabilizar los niveles de glucosa y facilita el ajuste de la medicación.',
+      color: 'green'
+    },
+    {
+      cat: 'alimentacion',
+      icon: '🍽️',
+      titulo: 'Plato del método saludable',
+      texto: 'La mitad del plato: vegetales sin almidón. Un cuarto: proteína magra. Un cuarto: carbohidratos complejos (arroz integral, frijoles, camote).',
+      color: 'green'
+    },
+    {
+      cat: 'alimentacion',
+      icon: '🚫',
+      titulo: 'Evita los azúcares simples',
+      texto: 'Refrescos, jugos comerciales, dulces y repostería elevan la glucosa rápidamente. Prefiere agua, infusiones sin azúcar y frutas enteras en porciones pequeñas.',
+      color: 'amber'
+    },
+    {
+      cat: 'alimentacion',
+      icon: '🥤',
+      titulo: 'Hidratación constante',
+      texto: 'La deshidratación concentra la glucosa en sangre. El paciente debe tomar al menos 8 vasos de agua al día, más en días calurosos o con ejercicio.',
+      color: 'blue'
+    },
+    {
+      cat: 'ejercicio',
+      icon: '🚶',
+      titulo: 'Caminata diaria de 30 minutos',
+      texto: 'El ejercicio moderado regular mejora la sensibilidad a la insulina. Consulta siempre con el médico antes de iniciar una rutina, especialmente en Tipo 1.',
+      color: 'green'
+    },
+    {
+      cat: 'ejercicio',
+      icon: '📏',
+      titulo: 'Mide antes y después del ejercicio',
+      texto: 'Verifica la glucemia antes de hacer ejercicio. Si está por debajo de 100 mg/dL, come un pequeño snack. Si está por encima de 250 mg/dL, postpone el ejercicio.',
+      color: 'teal'
+    },
+    {
+      cat: 'ejercicio',
+      icon: '👟',
+      titulo: 'Cuida los pies durante el ejercicio',
+      texto: 'Usa calzado cómodo y bien ajustado. Revisa los pies después de cada sesión de ejercicio en busca de ampollas, cortadas o enrojecimiento.',
+      color: 'amber'
+    },
+    {
+      cat: 'medicacion',
+      icon: '⏰',
+      titulo: 'Medicamentos a la misma hora',
+      texto: 'Administra insulina y medicamentos orales siempre en el horario indicado. Usa la app de recordatorios para no olvidar ninguna dosis.',
+      color: 'teal'
+    },
+    {
+      cat: 'medicacion',
+      icon: '🧊',
+      titulo: 'Almacenamiento de insulina',
+      texto: 'La insulina abierta puede mantenerse a temperatura ambiente (15–30°C) por 28–30 días. El exceso debe refrigerarse a 2–8°C. Nunca la congeles ni la expongas al sol.',
+      color: 'blue'
+    },
+    {
+      cat: 'medicacion',
+      icon: '💉',
+      titulo: 'Rota los sitios de inyección',
+      texto: 'Inyectar siempre en el mismo punto causa lipodistrofia, que altera la absorción de insulina. Rota entre abdomen, muslos y brazos según indicación médica.',
+      color: 'amber'
+    },
+    {
+      cat: 'emergencia',
+      icon: '🚨',
+      titulo: 'Hipoglucemia grave — actúa así',
+      texto: 'Si la persona está consciente: 15g de carbohidratos (medio vaso de jugo). Espera 15 minutos y vuelve a medir. Si está inconsciente: llama al 911 de inmediato, no des nada por boca.',
+      color: 'red'
+    },
+    {
+      cat: 'emergencia',
+      icon: '🆘',
+      titulo: 'Hiperglucemia severa',
+      texto: 'Glucosa mayor a 300 mg/dL con náuseas, vómito o respiración con olor frutal puede indicar cetoacidosis. Acude a urgencias inmediatamente.',
+      color: 'red'
+    },
+    {
+      cat: 'emergencia',
+      icon: '📄',
+      titulo: 'Identifica al paciente',
+      texto: 'El paciente debe llevar siempre una tarjeta o pulsera de identificación que indique que tiene diabetes, su tipo, medicamentos y tu número de contacto.',
+      color: 'amber'
+    },
+    {
+      cat: 'cuidador',
+      icon: '🤝',
+      titulo: 'Cuídate también a ti mismo',
+      texto: 'El agotamiento del cuidador es real. Busca apoyo en grupos de cuidadores, delega cuando sea posible y reserva tiempo para ti cada semana.',
+      color: 'green'
+    },
+    {
+      cat: 'cuidador',
+      icon: '📚',
+      titulo: 'Edúcate constantemente',
+      texto: 'La diabetes es una condición que evoluciona. Asiste a las consultas médicas con el paciente, haz preguntas y mantente actualizado sobre el tratamiento.',
+      color: 'teal'
+    },
+    {
+      cat: 'cuidador',
+      icon: '🗣️',
+      titulo: 'Comunicación con el equipo médico',
+      texto: 'Registra todo: valores de glucemia, síntomas, cambios de comportamiento. Esta información es valiosa para que el médico ajuste el tratamiento.',
+      color: 'blue'
+    },
+    {
+      cat: 'cuidador',
+      icon: '❤️',
+      titulo: 'Apoyo emocional al paciente',
+      texto: 'Vivir con diabetes puede causar frustración y tristeza. Escucha sin juzgar, celebra los logros pequeños y fomenta la autonomía del paciente en su propio cuidado.',
+      color: 'green'
+    }
+  ];
+
+  let categoriaActiva = 'todos';
+
+  function filtrar(cat, btn) {
+    categoriaActiva = cat;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderConsejos();
+  }
+
+  function renderConsejos() {
+    const grid = document.getElementById('consejosGrid');
+    const filtrados = categoriaActiva === 'todos'
+      ? CONSEJOS
+      : CONSEJOS.filter(c => c.cat === categoriaActiva);
+
+    grid.innerHTML = filtrados.map(c => `
+      <div class="consejo-card color-${c.color}">
+        <div class="consejo-icon">${c.icon}</div>
+        <div class="consejo-body">
+          <h3>${c.titulo}</h3>
+          <p>${c.texto}</p>
+        </div>
+        <span class="consejo-cat">${catLabel(c.cat)}</span>
+      </div>
+    `).join('');
+  }
+
+  function catLabel(cat) {
+    const m = {
+      glucemia: '📊 Glucemia',
+      alimentacion: '🥗 Alimentación',
+      ejercicio: '🏃 Ejercicio',
+      medicacion: '💊 Medicación',
+      emergencia: '🚨 Emergencia',
+      cuidador: '🤝 Cuidador'
+    };
+    return m[cat] || cat;
+  }
+
+  // Consejo destacado aleatorio
+  const dest = CONSEJOS[Math.floor(Math.random() * CONSEJOS.length)];
+  document.getElementById('destTitulo').textContent = dest.titulo;
+  document.getElementById('destDesc').textContent = dest.texto;
+
+  renderConsejos();
+</script>
+<script>
+  document.getElementById('userMenuBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('userDropdown').classList.toggle('open');
+  });
+  document.addEventListener('click', function() {
+    document.getElementById('userDropdown').classList.remove('open');
+  });
+</script>
+</body>
+</html>

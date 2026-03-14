@@ -1,0 +1,155 @@
+/* =========================================
+   SUGARFREE — Dashboard CSS
+   ========================================= */
+
+/* ── Fix layout principal ── */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.main-content {
+  margin-left: 260px;
+  padding: 32px;
+  width: calc(100% - 260px);
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* ── Dashboard grid ── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+}
+
+/* ── Lecturas ── */
+.lectura-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.lectura-item:last-child { border-bottom: none; }
+
+.lectura-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lectura-nombre {
+  font-size: .875rem;
+  font-weight: 500;
+}
+
+.lectura-right { text-align: right; }
+
+.lectura-valor {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: block;
+}
+
+.lectura-hora {
+  font-size: .72rem;
+  color: var(--text-muted);
+}
+
+/* ── Recordatorios en dashboard ── */
+.recordatorio-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.recordatorio-item:last-child { border-bottom: none; }
+
+.rec-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.rec-nombre {
+  font-size: .875rem;
+  font-weight: 600;
+}
+
+.rec-detalle {
+  font-size: .75rem;
+  color: var(--text-muted);
+}
+
+.recordatorio-item .badge { margin-left: auto; flex-shrink: 0; }
+
+/* ── Accesos rápidos ── */
+.quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.quick-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 12px;
+  background: var(--bg-body);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.quick-action-btn span:first-child { font-size: 1.6rem; }
+
+.quick-action-btn:hover {
+  background: #EFF9F9;
+  border-color: var(--brand-teal);
+  color: var(--brand-teal-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Empty state ── */
+.empty-state {
+  color: var(--text-muted);
+  font-size: .875rem;
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* ── Stats ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+  width: 100%;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .main-content { margin-left: 0; width: 100%; padding: 20px 16px; }
+}

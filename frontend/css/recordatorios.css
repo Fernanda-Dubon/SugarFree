@@ -1,0 +1,168 @@
+/* =========================================
+   SUGARFREE — Recordatorios CSS
+   ========================================= */
+
+.recordatorios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.rec-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.rec-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--brand-teal);
+}
+
+.rec-card:hover { box-shadow: var(--shadow-md); }
+
+.rec-card.inactivo { opacity: .6; }
+.rec-card.inactivo::before { background: var(--text-muted); }
+
+.rec-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.rec-hora {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--brand-teal-dark);
+  line-height: 1;
+}
+
+.rec-toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.rec-toggle input { opacity: 0; width: 0; height: 0; }
+
+.rec-toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--border);
+  border-radius: 99px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.rec-toggle input:checked + .rec-toggle-slider { background: var(--brand-teal); }
+
+.rec-toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px; height: 18px;
+  left: 3px; top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: var(--transition);
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+
+.rec-toggle input:checked + .rec-toggle-slider::before {
+  transform: translateX(20px);
+}
+
+.rec-med {
+  font-weight: 700;
+  font-size: .95rem;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rec-paciente {
+  font-size: .8rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.rec-dias {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.dia-pill {
+  padding: 2px 7px;
+  border-radius: 99px;
+  font-size: .68rem;
+  font-weight: 600;
+  border: 1px solid var(--brand-teal);
+  color: var(--brand-teal-dark);
+  background: #CCFBF1;
+}
+
+.dia-pill.inactive {
+  border-color: var(--border);
+  color: var(--text-muted);
+  background: var(--bg-body);
+}
+
+.rec-mensaje {
+  font-size: .78rem;
+  color: var(--text-muted);
+  font-style: italic;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
+.rec-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  justify-content: flex-end;
+}
+
+/* ── Días selector en modal ── */
+.dias-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.dia-check {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: .75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  transition: var(--transition);
+  user-select: none;
+}
+
+.dia-check:has(input:checked) {
+  background: #CCFBF1;
+  border-color: var(--brand-teal);
+  color: var(--brand-teal-dark);
+}
+
+.dia-check input { display: none; }

@@ -1,0 +1,141 @@
+/* =========================================
+   SUGARFREE — Consejos CSS
+   ========================================= */
+
+/* ── Filtros ── */
+.consejos-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.filter-btn {
+  padding: 7px 16px;
+  border-radius: 99px;
+  font-size: .8rem;
+  font-weight: 600;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  color: var(--text-secondary);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: var(--brand-teal);
+  border-color: var(--brand-teal);
+  color: #fff;
+}
+
+/* ── Destacado ── */
+.consejo-destacado {
+  background: linear-gradient(135deg, var(--bg-sidebar) 0%, #1B3A5A 100%);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.consejo-destacado::after {
+  content: '💡';
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 5rem;
+  opacity: .08;
+}
+
+.dest-badge {
+  display: inline-block;
+  background: var(--brand-teal);
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  margin-bottom: 12px;
+}
+
+.consejo-destacado h2 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.consejo-destacado p {
+  font-size: .9rem;
+  opacity: .85;
+  line-height: 1.7;
+  max-width: 600px;
+}
+
+/* ── Grid de consejos ── */
+.consejos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.consejo-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  position: relative;
+  border-top: 3px solid transparent;
+}
+
+.consejo-card.color-teal   { border-top-color: var(--brand-teal); }
+.consejo-card.color-green  { border-top-color: var(--brand-green); }
+.consejo-card.color-amber  { border-top-color: var(--brand-amber); }
+.consejo-card.color-red    { border-top-color: var(--brand-red); }
+.consejo-card.color-blue   { border-top-color: var(--brand-blue); }
+
+.consejo-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.consejo-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.consejo-body h3 {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.consejo-body p {
+  font-size: .82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.consejo-cat {
+  font-size: .68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}

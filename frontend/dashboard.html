@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SugarFree — Dashboard</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🩺</div>
+      <div>
+        <span>SugarFree</span>
+        <small>Panel de cuidador</small>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-link active">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+
+      <p class="sidebar-label">Pacientes</p>
+      <a href="pages/pacientes.html" class="nav-link">
+        <span class="nav-icon">👤</span> Mis Pacientes
+      </a>
+      <a href="pages/glucemia.html" class="nav-link">
+        <span class="nav-icon">📊</span> Glucemia
+      </a>
+
+      <p class="sidebar-label">Cuidados</p>
+      <a href="pages/medicamentos.html" class="nav-link">
+        <span class="nav-icon">💊</span> Medicamentos
+      </a>
+      <a href="pages/recordatorios.html" class="nav-link">
+        <span class="nav-icon">🔔</span> Recordatorios
+      </a>
+      <a href="pages/dietas.html" class="nav-link">
+        <span class="nav-icon">🥗</span> Dietas
+      </a>
+
+      <p class="sidebar-label">Más</p>
+      <a href="pages/consejos.html" class="nav-link">
+        <span class="nav-icon">💡</span> Consejos
+      </a>
+    </nav>
+
+   <div class="sidebar-footer">
+  <div class="avatar" id="sidebarAvatar">C</div>
+  <div class="user-info">
+    <div class="user-name" id="sidebarName">Cuidador</div>
+    <div class="user-role">Cuidador registrado</div>
+  </div>
+  <div class="user-menu-wrapper">
+    <button class="logout-btn" id="userMenuBtn">⋮</button>
+    <div class="user-dropdown" id="userDropdown">
+      <button onclick="logout()" class="dropdown-item dropdown-item-danger">
+        🚪 Cerrar sesión
+      </button>
+    </div>
+  </div>
+</div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-content">
+
+    <div class="page-header">
+      <h1 id="welcomeMsg">¡Buenos días, Cuidador! 👋</h1>
+      <p>Aquí tienes el resumen de hoy para todos tus pacientes.</p>
+    </div>
+
+    <!-- Stats rápidas -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-icon teal">👤</div>
+        <div class="stat-body">
+          <div class="stat-value" id="statPacientes">0</div>
+          <div class="stat-label">Pacientes activos</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue">📊</div>
+        <div class="stat-body">
+          <div class="stat-value" id="statRegistros">0</div>
+          <div class="stat-label">Registros hoy</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon amber">🔔</div>
+        <div class="stat-body">
+          <div class="stat-value" id="statRecords">0</div>
+          <div class="stat-label">Recordatorios pendientes</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red">⚠️</div>
+        <div class="stat-body">
+          <div class="stat-value" id="statAlertas">0</div>
+          <div class="stat-label">Alertas activas</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid central -->
+    <div class="dashboard-grid">
+
+      <!-- Últimas lecturas -->
+      <div class="card">
+        <div class="card-title">📊 Últimas lecturas de glucemia</div>
+        <div id="ultimasLecturas">
+          <p class="empty-state">Cargando lecturas...</p>
+        </div>
+        <a href="pages/glucemia.html" class="btn btn-secondary btn-sm" style="margin-top:14px">Ver línea de tiempo completa →</a>
+      </div>
+
+      <!-- Alertas del día -->
+      <div class="card">
+        <div class="card-title">🚨 Alertas del día</div>
+        <div id="alertasHoy">
+          <p class="empty-state">Sin alertas registradas hoy.</p>
+        </div>
+      </div>
+
+      <!-- Recordatorios próximos -->
+      <div class="card">
+        <div class="card-title">🔔 Próximos recordatorios</div>
+        <div id="proximosRecordatorios">
+          <p class="empty-state">Cargando recordatorios...</p>
+        </div>
+        <a href="pages/recordatorios.html" class="btn btn-secondary btn-sm" style="margin-top:14px">Gestionar recordatorios →</a>
+      </div>
+
+      <!-- Accesos rápidos -->
+      <div class="card">
+        <div class="card-title">⚡ Accesos rápidos</div>
+        <div class="quick-actions">
+          <a href="pages/glucemia.html" class="quick-action-btn">
+            <span>📊</span>
+            <span>Registrar glucemia</span>
+          </a>
+          <a href="pages/medicamentos.html" class="quick-action-btn">
+            <span>💊</span>
+            <span>Medicamentos</span>
+          </a>
+          <a href="pages/dietas.html" class="quick-action-btn">
+            <span>🥗</span>
+            <span>Ver dieta hoy</span>
+          </a>
+          <a href="pages/pacientes.html" class="quick-action-btn">
+            <span>👤</span>
+            <span>Nuevo paciente</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/utils.js"></script>
+<script>
+  // Redirigir si no hay sesión
+  requireAuth();
+
+  // Saludo según hora
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? '¡Buenos días' : hour < 18 ? '¡Buenas tardes' : '¡Buenas noches';
+  const user = getUser();
+  if (user) {
+    document.getElementById('welcomeMsg').textContent = `${greeting}, ${user.nombre}! 👋`;
+    document.getElementById('sidebarName').textContent = user.nombre;
+    document.getElementById('sidebarAvatar').textContent = user.nombre.charAt(0).toUpperCase();
+  }
+
+  // Cargar datos del dashboard
+  async function loadDashboard() {
+    try {
+      const [pacientes, registrosHoy, recordatorios] = await Promise.all([
+        api('/pacientes'),
+        api('/glucemia/hoy'),
+        api('/recordatorios/pendientes')
+      ]);
+
+      document.getElementById('statPacientes').textContent = pacientes.length || 0;
+      document.getElementById('statRegistros').textContent = registrosHoy.length || 0;
+      document.getElementById('statRecords').textContent = recordatorios.length || 0;
+
+      // Alertas (lecturas fuera de rango)
+      const alertas = (registrosHoy || []).filter(r =>
+        r.valor < 70 || r.valor > 180
+      );
+      document.getElementById('statAlertas').textContent = alertas.length;
+
+      // Últimas lecturas
+      if (registrosHoy && registrosHoy.length > 0) {
+        const html = registrosHoy.slice(0, 4).map(r => {
+          const estado = glucoseStatus(r.valor);
+          return `
+            <div class="lectura-item">
+              <div class="lectura-left">
+                <span class="badge badge-${estado.color}">${estado.label}</span>
+                <span class="lectura-nombre">${r.paciente?.nombre || 'Paciente'}</span>
+              </div>
+              <div class="lectura-right">
+                <span class="lectura-valor">${r.valor} mg/dL</span>
+                <span class="lectura-hora">${formatTime(r.fecha)}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+        document.getElementById('ultimasLecturas').innerHTML = html;
+      }
+
+      // Recordatorios
+      if (recordatorios && recordatorios.length > 0) {
+        const html = recordatorios.slice(0, 3).map(r => `
+          <div class="recordatorio-item">
+            <span class="rec-icon">💊</span>
+            <div>
+              <div class="rec-nombre">${r.medicamento?.nombre || 'Medicamento'}</div>
+              <div class="rec-detalle">${r.paciente?.nombre} · ${r.hora}</div>
+            </div>
+            <span class="badge badge-amber">Pendiente</span>
+          </div>
+        `).join('');
+        document.getElementById('proximosRecordatorios').innerHTML = html;
+      }
+
+    } catch (err) {
+      console.warn('Error cargando dashboard:', err.message);
+    }
+  }
+
+  loadDashboard();
+</script>
+<script>
+  document.getElementById('userMenuBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('userDropdown').classList.toggle('open');
+  });
+  document.addEventListener('click', function() {
+    document.getElementById('userDropdown').classList.remove('open');
+  });
+</script>
+</body>
+</html>

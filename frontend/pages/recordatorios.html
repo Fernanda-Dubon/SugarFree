@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SugarFree — Recordatorios</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/recordatorios.css">
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+  <a href="../dashboard.html" style="display:flex; align-items:center; gap:10px; text-decoration:none">
+    <div class="logo-icon">🩺</div>
+    <div>
+      <span>SugarFree</span>
+      <small>Panel de cuidador</small>
+    </div>
+  </a>
+</div>
+    <nav class="sidebar-nav">
+      <a href="../dashboard.html" class="nav-link"><span class="nav-icon">🏠</span> Dashboard</a>
+      <p class="sidebar-label">Pacientes</p>
+      <a href="pacientes.html" class="nav-link"><span class="nav-icon">👤</span> Mis Pacientes</a>
+      <a href="glucemia.html" class="nav-link"><span class="nav-icon">📊</span> Glucemia</a>
+      <p class="sidebar-label">Cuidados</p>
+      <a href="medicamentos.html" class="nav-link"><span class="nav-icon">💊</span> Medicamentos</a>
+      <a href="recordatorios.html" class="nav-link active"><span class="nav-icon">🔔</span> Recordatorios</a>
+      <a href="dietas.html" class="nav-link"><span class="nav-icon">🥗</span> Dietas</a>
+      <p class="sidebar-label">Más</p>
+      <a href="consejos.html" class="nav-link"><span class="nav-icon">💡</span> Consejos</a>
+    </nav>
+   <div class="sidebar-footer">
+  <div class="avatar" id="sidebarAvatar">C</div>
+  <div class="user-info">
+    <div class="user-name" id="sidebarName">Cuidador</div>
+    <div class="user-role">Cuidador registrado</div>
+  </div>
+  <div class="user-menu-wrapper">
+    <button class="logout-btn" id="userMenuBtn">⋮</button>
+    <div class="user-dropdown" id="userDropdown">
+      <button onclick="logout()" class="dropdown-item dropdown-item-danger">
+        🚪 Cerrar sesión
+      </button>
+    </div>
+  </div>
+</div>
+  </aside>
+
+  <main class="main-content">
+
+    <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-end">
+      <div>
+        <h1>🔔 Recordatorios</h1>
+        <p>Configura alarmas de medicamentos para cada paciente.</p>
+      </div>
+      <button class="btn btn-primary" onclick="abrirModal()">+ Nuevo recordatorio</button>
+    </div>
+
+    <div class="patient-selector">
+      <label>👤 Paciente:</label>
+      <select id="pacienteSelect" onchange="cargarRecordatorios()">
+        <option value="">Todos los pacientes</option>
+      </select>
+    </div>
+
+    <!-- Lista de recordatorios en tarjetas -->
+    <div class="recordatorios-grid" id="recordatoriosGrid">
+      <p class="empty-state" style="grid-column:1/-1">Cargando recordatorios...</p>
+    </div>
+
+  </main>
+</div>
+
+<!-- Recordatorio Medicamento-->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalTitle">Nuevo recordatorio</h2>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+    <form id="recForm">
+      <input type="hidden" id="recId">
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Paciente *</label>
+          <select class="form-control" id="recPaciente" onchange="cargarMeds()" required>
+            <option value="">Seleccionar...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Medicamento *</label>
+          <select class="form-control" id="recMedicamento" required>
+            <option value="">Primero selecciona paciente</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Hora del recordatorio *</label>
+          <input class="form-control" type="time" id="recHora" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Días de la semana</label>
+          <div class="dias-selector" id="diasSelector">
+            <label class="dia-check"><input type="checkbox" value="lun" checked> Lun</label>
+            <label class="dia-check"><input type="checkbox" value="mar" checked> Mar</label>
+            <label class="dia-check"><input type="checkbox" value="mie" checked> Mié</label>
+            <label class="dia-check"><input type="checkbox" value="jue" checked> Jue</label>
+            <label class="dia-check"><input type="checkbox" value="vie" checked> Vie</label>
+            <label class="dia-check"><input type="checkbox" value="sab" checked> Sáb</label>
+            <label class="dia-check"><input type="checkbox" value="dom" checked> Dom</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mensaje del recordatorio</label>
+        <input class="form-control" id="recMensaje" placeholder="Ej: Tomar con el desayuno">
+      </div>
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:8px">
+        <button type="button" class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar recordatorio</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="../js/api.js"></script>
+script src="../js/auth.js"></script
+<script src="../js/utils.js"></script>
+<script src="../js/recordatorios.js"></script>
+<script>
+  document.getElementById('userMenuBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('userDropdown').classList.toggle('open');
+  });
+  document.addEventListener('click', function() {
+    document.getElementById('userDropdown').classList.remove('open');
+  });
+</script>
+</body>
+</html>

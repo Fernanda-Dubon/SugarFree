@@ -1,0 +1,220 @@
+/* =========================================
+   SUGARFREE — Glucemia CSS (Línea de tiempo)
+   ========================================= */
+
+.glucemia-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.glucemia-toolbar .patient-selector {
+  flex: 1;
+  margin-bottom: 0;
+  min-width: 260px;
+}
+
+/* ── Timeline ── */
+.timeline-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+/* Línea vertical central */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--brand-teal), rgba(14,165,160,.1));
+  border-radius: 99px;
+}
+
+/* ── Grupo por fecha ── */
+.timeline-date-group {
+  margin-bottom: 28px;
+}
+
+.timeline-date-label {
+  font-family: var(--font-display);
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: var(--text-muted);
+  background: var(--bg-body);
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
+  margin-left: -10px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Entrada de línea de tiempo ── */
+.timeline-entry {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 14px;
+  animation: slideIn .3s var(--ease);
+}
+
+/* Punto de la línea */
+.timeline-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  flex-shrink: 0;
+  margin-top: 12px;
+  margin-left: -9px;
+  position: relative;
+  z-index: 2;
+  box-shadow: var(--shadow-sm);
+}
+
+.timeline-dot.normal  { background: var(--brand-green); }
+.timeline-dot.low     { background: var(--brand-blue); }
+.timeline-dot.high    { background: var(--brand-amber); }
+.timeline-dot.danger  { background: var(--brand-red); }
+
+/* Tarjeta de la entrada */
+.timeline-card {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  border-left: 4px solid transparent;
+}
+
+.timeline-card:hover { box-shadow: var(--shadow-md); }
+
+.timeline-card.status-normal { border-left-color: var(--brand-green); }
+.timeline-card.status-low    { border-left-color: var(--brand-blue); }
+.timeline-card.status-high   { border-left-color: var(--brand-amber); }
+.timeline-card.status-danger { border-left-color: var(--brand-red); }
+
+.tc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tc-valor {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.tc-valor.normal { color: var(--brand-green); }
+.tc-valor.low    { color: var(--brand-blue); }
+.tc-valor.high   { color: var(--brand-amber); }
+.tc-valor.danger { color: var(--brand-red); }
+
+.tc-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tc-hora {
+  font-size: .78rem;
+  color: var(--text-muted);
+}
+
+.tc-body {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tc-momento {
+  font-size: .78rem;
+  color: var(--text-secondary);
+  background: var(--bg-body);
+  padding: 2px 8px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+}
+
+.tc-notas {
+  font-size: .8rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ── Alerta banner ── */
+.alert-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  margin-bottom: 14px;
+  border: 1px solid;
+  animation: slideIn .3s var(--ease);
+}
+
+.alert-banner.low {
+  background: #EFF6FF;
+  border-color: #93C5FD;
+  color: #1E3A8A;
+}
+
+.alert-banner.high {
+  background: #FFF7ED;
+  border-color: #FCD34D;
+  color: #78350F;
+}
+
+.alert-banner.danger {
+  background: #FFF1F2;
+  border-color: #FCA5A5;
+  color: #7F1D1D;
+}
+
+.alert-banner .alert-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 1px; }
+.alert-banner strong { display: block; font-size: .9rem; margin-bottom: 2px; }
+.alert-banner p { font-size: .82rem; opacity: .85; margin: 0; }
+
+/* ── Preview en modal ── */
+#glucPreview .preview-result {
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: .875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+#glucPreview .preview-result.normal { background: #DCFCE7; color: #15803D; }
+#glucPreview .preview-result.low    { background: #DBEAFE; color: #1D4ED8; }
+#glucPreview .preview-result.high   { background: #FEF3C7; color: #92400E; }
+#glucPreview .preview-result.danger { background: #FFE4E6; color: #9F1239; }
